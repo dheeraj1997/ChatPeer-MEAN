@@ -1,0 +1,53 @@
+<div class="wrapper">
+  <div id="formContent">
+    <!--<div>-->
+      <!--<img src="assets/img/user-avatar.png" id="icon" alt="User Icon" />-->
+    <!--</div>-->
+
+    <table  class="table-fill">
+
+      <thead>
+
+      <tr>
+        <th><img style="display:block;" width="100%" height="auto"   src="assets/img/user-avatar.png" id="icon" alt="User Icon" /></th>
+        <th colspan="2" class="text-center">User Profile </th>
+      </tr>
+      <!--<tr><th><img src="assets/img/user-avatar.png" id="icon" alt="User Icon" /></th></tr>-->
+      </thead>
+
+      <tbody *ngIf="userDetails">
+
+      <tr>
+        <td>Name</td>
+        <td>{{userDetails.fullName}}</td>
+      </tr>
+
+      <tr>
+        <td>Age</td>
+        <td>{{userDetails.age}}</td>
+      </tr>
+      <tr>
+        <td>Locality</td>
+        <td>{{userDetails.locality}}</td>
+      </tr>
+      <tr>
+        <td>Interest</td>
+        <td>{{userDetails.interest}}</td>
+      </tr>
+      <tr>
+        <td colspan="2" class="text-center">
+          <input type="button" (click)="ifAccept()" value="Chat" />
+          <input type="button" (click)="ifReject()" value="Next" />
+          <input type="button" (click)="ifProfile()" value="My Profile"/>
+        </td>
+      </tr>
+
+      </tbody>
+    </table>
+
+    <!-- Error message -->
+    <div class="alert" *ngIf="serverErrorMessages">
+      {{serverErrorMessages}}
+    </div>
+  </div>
+</div>
