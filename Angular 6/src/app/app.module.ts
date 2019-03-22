@@ -13,6 +13,7 @@ import { appRoutes } from './routes';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { SignInComponent } from './user/sign-in/sign-in.component';
 import { UserService } from './shared/user.service';
+import { ChatService} from "./shared/chat.service";
 //other
 import { AuthGuard } from './auth/auth.guard';
 import { AuthInterceptor } from './auth/auth.interceptor';
@@ -39,7 +40,7 @@ import { ChatroomComponent } from './chatroom/chatroom.component';
     provide: HTTP_INTERCEPTORS,
     useClass: AuthInterceptor,
     multi: true
-  },AuthGuard,UserService],
+  },AuthGuard,UserService,ChatService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

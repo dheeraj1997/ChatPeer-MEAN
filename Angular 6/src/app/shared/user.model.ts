@@ -5,4 +5,5 @@ export class User {
     interest: object;
     email: string;
     password: string;
+    status: boolean;
 }

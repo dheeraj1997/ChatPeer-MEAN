@@ -10,10 +10,11 @@ module.exports.register = (req, res, next) => {
     user.email = req.body.email;
     user.age = req.body.age;
     user.locality = req.body.locality;
-    let int = req.body.interest.split(",");
+    var int = req.body.interest.toLowerCase().split(",");
     user.interest = int;
     user.password = req.body.password;
-    // console.log('Type of interest ', user.interest);
+    user.status =  req.body.status;
+    // console.log('Type of interest ', user);
     user.save((err, doc) => {
         if (!err)
             res.send(doc);
@@ -33,10 +34,32 @@ module.exports.authenticate = (req, res, next) => {
         // error from passport middleware
         if (err) return res.status(400).json(err);
         // registered user
-        else if (user) return res.status(200).json({ "token": user.generateJwt() });
+        else if (user) {
+            console.log("authenticating ",req.body);
+            User.updateOne(
+                {"email":user.email},
+                {"$set":{"status":true}},
+                function (err, res) {
+                    if (err) throw err;
+                    console.log(res);
+                });
+            return res.status(200).json({ "token": user.generateJwt() });
+        }
         // unknown user or wrong password
         else return res.status(404).json(info);
     })(req, res);
+}
+
+module.exports.logout = (req, res, next) => {
+    console.log("logging out ",req.params);
+    User.updateOne(
+        {_id:req.params._id},
+        {$set:{status:false}},
+        function (err,res) {
+            if (err) throw err;
+            console.log(res);
+        });
+    return res.status(200).json({status:true, message:'User logged out'});
 }
 
 module.exports.userProfile = (req, res, next) =>{
@@ -54,11 +77,12 @@ module.exports.userProfile = (req, res, next) =>{
 module.exports.suggestProfile = (req, res, next) =>{
     // console.log("suggesting profile ... ", req.params);
     User.findOne({ _id: req.params._id }).then(function (results){
-        console.log("then work ",results._id);
+        // console.log("then work ",results._id);
             User.aggregate([
                 {
                     "$match": {
                         "_id": {"$ne": results._id},
+                        "status": {"$ne": false},
                         "$or": [
                             {"interest": {"$in": results.interest}},
                             {"locality": results.locality},

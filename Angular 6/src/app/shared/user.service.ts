@@ -14,7 +14,8 @@ export class UserService {
     locality: '',
     interest: [''],
     email: '',
-    password: ''
+    password: '',
+    status: false
   };
 
   noAuthHeader = { headers: new HttpHeaders({ 'NoAuth': 'True' }) };
@@ -25,13 +26,20 @@ export class UserService {
 
   postUser(user: User){
     // user.interest = user.interest.split(',');
-    // console.log(user.interest);
-
+    // user.status  = false;
+    console.log("postUser ",user);
     return this.http.post(environment.apiBaseUrl+'/register',user,this.noAuthHeader);
   }
 
   login(authCredentials) {
     return this.http.post(environment.apiBaseUrl + '/authenticate', authCredentials,this.noAuthHeader);
+  }
+
+  logout() {
+    const id = localStorage.getItem('_id');
+    console.log("api accessed ",id);
+    return this.http.get(environment.apiBaseUrl + '/logout/'+id);
+
   }
 
   getUserProfile() {

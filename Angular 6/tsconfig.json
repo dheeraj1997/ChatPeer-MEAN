@@ -15,6 +15,7 @@
     "lib": [
       "es2017",
       "dom"
-    ]
+    ],
+//    "socket.io-client": ["./node_modules/socket.io-client/dist"]
   }
 }

@@ -1,6 +1,7 @@
 require('./config/config');
 require('./models/db');
 require('./config/passportConfig');
+const path = require('path');
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -9,13 +10,19 @@ const passport = require('passport');
 
 const rtsIndex = require('./routes/index.router');
 
+var chat = require('./routes/chat');
 var app = express();
+
+
+// app.use(express.static(path.join(__dirname+'/public/')));
+// console.log(path.join(__dirname+'/public'));
 
 // middleware
 app.use(bodyParser.json());
 app.use(cors());
 app.use(passport.initialize());
 app.use('/api', rtsIndex);
+app.use('/api/chat', chat);
 
 // error handler
 app.use((err, req, res, next) => {

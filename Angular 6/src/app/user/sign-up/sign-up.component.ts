@@ -33,7 +33,7 @@ export class SignUpComponent implements OnInit {
 
   onSubmit(form: NgForm) {
     // form.form.controls.interest.value = form.form.controls.interest.value.split(',');
-    console.log(form.form.value);
+    console.log("formvalue ",form.form.value);
     this.userService.postUser(form.value).subscribe(
       res => {
         this.showSucessMessage = true;
@@ -57,7 +57,8 @@ export class SignUpComponent implements OnInit {
       locality:'',
       interest:[''],
       email: '',
-      password: ''
+      password: '',
+      status: false
     };
     form.resetForm();
     this.serverErrorMessages = '';
