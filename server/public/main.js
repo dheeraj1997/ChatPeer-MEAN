@@ -568,18 +568,25 @@ var UserService = /** @class */ (function () {
             locality: '',
             interest: [''],
             email: '',
-            password: ''
+            password: '',
+            status: false
         };
         this.noAuthHeader = { headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({ 'NoAuth': 'True' }) };
     }
     //HttpMethods
     UserService.prototype.postUser = function (user) {
         // user.interest = user.interest.split(',');
-        // console.log(user.interest);
+        // user.status  = false;
+        console.log("postUser ", user);
         return this.http.post(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].apiBaseUrl + '/register', user, this.noAuthHeader);
     };
     UserService.prototype.login = function (authCredentials) {
         return this.http.post(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].apiBaseUrl + '/authenticate', authCredentials, this.noAuthHeader);
+    };
+    UserService.prototype.logout = function () {
+        var id = localStorage.getItem('_id');
+        console.log("api accessed ", id);
+        return this.http.get(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].apiBaseUrl + '/logout/' + id);
     };
     UserService.prototype.getUserProfile = function () {
         return this.http.get(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].apiBaseUrl + '/userProfile');
@@ -645,7 +652,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"wrapper\">\n  <div id=\"formContent\">\n    <!--<div>-->\n      <!--<img src=\"assets/img/user-avatar.png\" id=\"icon\" alt=\"User Icon\" />-->\n    <!--</div>-->\n\n    <table  class=\"table-fill\">\n\n      <thead>\n\n      <tr>\n        <th><img style=\"display:block;\" width=\"100%\" height=\"auto\"   src=\"assets/img/user-avatar.png\" id=\"icon\" alt=\"User Icon\" /></th>\n        <th colspan=\"2\" class=\"text-center\">User Profile </th>\n      </tr>\n      <!--<tr><th><img src=\"assets/img/user-avatar.png\" id=\"icon\" alt=\"User Icon\" /></th></tr>-->\n      </thead>\n\n      <tbody *ngIf=\"userDetails\">\n\n      <tr>\n        <td>Name</td>\n        <td>{{userDetails.fullName}}</td>\n      </tr>\n\n      <tr>\n        <td>Age</td>\n        <td>{{userDetails.age}}</td>\n      </tr>\n      <tr>\n        <td>Locality</td>\n        <td>{{userDetails.locality}}</td>\n      </tr>\n      <tr>\n        <td>Interest</td>\n        <td>{{userDetails.interest}}</td>\n      </tr>\n      <tr>\n        <td colspan=\"2\" class=\"text-center\">\n          <input type=\"button\" (click)=\"joinRoom()\" value=\"Chat\" />\n          <input type=\"button\" (click)=\"ifReject()\" value=\"Next\" />\n          <input type=\"button\" (click)=\"ifProfile()\" value=\"My Profile\"/>\n          <input type=\"button\" (click)=\"onLogout()\" value=\"Logout\"/>\n        </td>\n      </tr>\n\n      </tbody>\n    </table>\n\n    <!-- Error message -->\n    <div class=\"alert\" *ngIf=\"serverErrorMessages\">\n      {{serverErrorMessages}}\n    </div>\n  </div>\n</div>\n"
+module.exports = "<div class=\"wrapper\">\n  <div id=\"formContent\">\n    <!--<div>-->\n      <!--<img src=\"assets/img/user-avatar.png\" id=\"icon\" alt=\"User Icon\" />-->\n    <!--</div>-->\n\n    <table  class=\"table-fill\" *ngIf=\"userDetails\">\n\n      <thead>\n\n      <tr>\n        <th><img style=\"display:block;\" width=\"100%\" height=\"auto\"   src=\"assets/img/user-avatar.png\" id=\"icon\" alt=\"User Icon\" /></th>\n        <th colspan=\"2\" class=\"text-center\">User Profile </th>\n      </tr>\n      <!--<tr><th><img src=\"assets/img/user-avatar.png\" id=\"icon\" alt=\"User Icon\" /></th></tr>-->\n      </thead>\n\n      <tbody>\n\n      <tr>\n        <td>Name</td>\n        <td>{{userDetails.fullName}}</td>\n      </tr>\n\n      <tr>\n        <td>Age</td>\n        <td>{{userDetails.age}}</td>\n      </tr>\n      <tr>\n        <td>Locality</td>\n        <td>{{userDetails.locality}}</td>\n      </tr>\n      <tr>\n        <td>Interest</td>\n        <td>{{userDetails.interest}}</td>\n      </tr>\n      <tr>\n        <td colspan=\"2\" class=\"text-center\">\n          <input type=\"button\" (click)=\"joinRoom()\" value=\"Chat\" />\n          <input type=\"button\" (click)=\"ifReject()\" value=\"Next\" />\n          <input type=\"button\" (click)=\"ifProfile()\" value=\"My Profile\"/>\n          <input type=\"button\" (click)=\"onLogout()\" value=\"Logout\"/>\n        </td>\n      </tr>\n    </table>\n\n    <table *ngIf=\"!userDetails\">\n\n    <thead>\n    <tr>\n      <!--<th><img style=\"display:block;\" width=\"100%\" height=\"auto\"   src=\"assets/img/user-avatar.png\" id=\"icon\" alt=\"User Icon\" /></th>-->\n      <th colspan=\"2\" class=\"text-center\">No Users Online</th>\n    </tr>\n    <!--<tr><th><img src=\"assets/img/user-avatar.png\" id=\"icon\" alt=\"User Icon\" /></th></tr>-->\n    </thead>\n    <tbody >\n    <tr aria-rowspan=\"2\">\n      <td colspan=\"2\" class=\"text-center\">Please refresh the browser or try again later!!</td>\n      <!--<alert>No Users Online</alert>-->\n    </tr>\n    <tr>\n      <td><input type=\"button\" (click)=\"ifProfile()\" value=\"My Profile\"/></td>\n      <td><input type=\"button\" (click)=\"onLogout()\" value=\"Logout\"/></td>\n    </tr>\n    </tbody>\n    </table>\n\n    <!-- Error message -->\n    <div class=\"alert\" *ngIf=\"serverErrorMessages\">\n      {{serverErrorMessages}}\n    </div>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -684,6 +691,7 @@ var ShowProfileComponent = /** @class */ (function () {
         this.userService = userService;
         this.router = router;
         this.chatService = chatService;
+        this.count = 0;
         this.joinned = false;
         this.newUser = { nickname: '', room: '' };
         this.msgData = { room: '', nickname: '', message: '' };
@@ -707,6 +715,12 @@ var ShowProfileComponent = /** @class */ (function () {
         console.log("constructor was called.");
     };
     ShowProfileComponent.prototype.onLogout = function () {
+        console.log('onLogout clicked');
+        this.userService.logout().subscribe(function (res) {
+            console.log('success ', res);
+        }, function (err) {
+            console.log('error logging out ', err);
+        });
         this.userService.deleteToken();
         this.router.navigate(['/login']);
     };
@@ -717,7 +731,12 @@ var ShowProfileComponent = /** @class */ (function () {
     //   this.router.navigate(['/chatroom']);
     // }
     ShowProfileComponent.prototype.ifReject = function () {
-        this.userDetails = this.suggested[1];
+        if (this.count < this.suggested.length) {
+            this.count = this.count + 1;
+            this.userDetails = this.suggested[this.count];
+        }
+        else
+            this.userDetails = null;
     };
     ShowProfileComponent.prototype.getChatByRoom = function (room) {
         var _this = this;
@@ -820,6 +839,7 @@ var UserProfileComponent = /** @class */ (function () {
     };
     UserProfileComponent.prototype.onLogout = function () {
         this.userService.deleteToken();
+        this.userService.logout();
         this.router.navigate(['/login']);
     };
     UserProfileComponent = __decorate([
@@ -902,6 +922,7 @@ var SignInComponent = /** @class */ (function () {
         var _this = this;
         this.userService.login(form.value).subscribe(function (res) {
             _this.userService.setToken(res['token']);
+            // this.userService.selectedUser.status = true;
             _this.router.navigateByUrl('/show-profile');
         }, function (err) {
             _this.serverErrorMessages = err.error.message;
@@ -989,7 +1010,7 @@ var SignUpComponent = /** @class */ (function () {
     SignUpComponent.prototype.onSubmit = function (form) {
         var _this = this;
         // form.form.controls.interest.value = form.form.controls.interest.value.split(',');
-        console.log(form.form.value);
+        console.log("formvalue ", form.form.value);
         this.userService.postUser(form.value).subscribe(function (res) {
             _this.showSucessMessage = true;
             setTimeout(function () { return _this.showSucessMessage = false; }, 4000);
@@ -1009,7 +1030,8 @@ var SignUpComponent = /** @class */ (function () {
             locality: '',
             interest: [''],
             email: '',
-            password: ''
+            password: '',
+            status: false
         };
         form.resetForm();
         this.serverErrorMessages = '';

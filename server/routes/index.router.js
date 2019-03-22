@@ -6,7 +6,7 @@ const ctrlUser = require('../controllers/user.controller');
 const jwtHelper = require('../config/jwtHelper');
 
 
-console.log('router accessed');
+// console.log('router accessed');
 router.post('/register', ctrlUser.register);
 router.post('/authenticate', ctrlUser.authenticate);
 router.get('/logout/:_id', ctrlUser.logout);
