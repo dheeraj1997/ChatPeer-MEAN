@@ -36,10 +36,9 @@ export class UserService {
   }
 
   logout() {
-    const id = localStorage.getItem('_id');
+    const id = this.getId();
     console.log("api accessed ",id);
     return this.http.get(environment.apiBaseUrl + '/logout/'+id);
-
   }
 
   getUserProfile() {
@@ -47,7 +46,7 @@ export class UserService {
   }
 
   getOthersProfile() {
-    const id = localStorage.getItem('_id');
+    const id = this.getId();
     return this.http.get(environment.apiBaseUrl + '/suggestProfile/'+id);
   }
 
@@ -64,6 +63,15 @@ export class UserService {
 
   deleteToken() {
     localStorage.removeItem('token');
+    localStorage.removeItem('_id');
+  }
+
+  setID(_id:string){
+    localStorage.setItem('_id',_id);
+  }
+
+  getId() {
+    return localStorage.getItem('_id');
   }
 
   getUserPayload() {

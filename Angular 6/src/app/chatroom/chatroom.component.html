@@ -16,29 +16,30 @@
           <ul class="chat">
             <li *ngFor="let c of chats">
               <div class="left clearfix" *ngIf="c.nickname===msgData.nickname; else rightchat">
-                            <span class="chat-img pull-left">
-                              <img src="http://placehold.it/50/55C1E7/fff&text=ME" alt="User Avatar" class="img-circle" />
+                            <span class="chat-img pull-right">
+                              <img src="http://placehold.it/50/55C1E7/fff&text=ME" style="width: 20px;" alt="User Avatar" class="img-circle" />
                             </span>
                 <div class="chat-body clearfix">
                   <div class="header">
-                    <strong class="primary-font">{{ c.nickname }}</strong> <small class="pull-right text-muted">
+                    <strong class="primary-font pull-right">{{ c.nickname }}</strong> <small class="pull-left text-muted">
                     <span class="glyphicon glyphicon-time"></span>{{ c.updated_at | date: 'medium' }}</small>
                   </div>
-                  <p>{{ c.message }}</p>
                 </div>
+                <span class="pull-right" style="margin-right: 20px;">{{ c.message }}</span>
               </div>
               <ng-template #rightchat>
                 <div class="right clearfix">
-                              <span class="chat-img pull-right">
-                                <img src="http://placehold.it/50/FA6F57/fff&text=U" alt="User Avatar" class="img-circle" />
+                              <span class="chat-img pull-left">
+                                <img src="http://placehold.it/50/FA6F57/fff&text=U" alt="User Avatar" class="img-circle" style="width: 20px;" />
                               </span>
                   <div class="chat-body clearfix">
                     <div class="header">
-                      <small class=" text-muted"><span class="glyphicon glyphicon-time"></span>{{ c.updated_at | date: 'medium' }}</small>
-                      <strong class="pull-right primary-font">{{ c.nickname }}</strong>
+                      <small class=" text-muted pull-right"><span class="glyphicon glyphicon-time"></span>{{ c.updated_at | date: 'medium' }}</small>
+                      <strong class="pull-left primary-font">{{ c.nickname }}</strong>
                     </div>
-                    <p>{{ c.message }}</p>
+
                   </div>
+                  <span class="pull-left" style="margin-left:20px;">{{ c.message }}</span>
                 </div>
               </ng-template>
             </li>
@@ -49,10 +50,11 @@
             <div class="input-group">
               <input type="hidden" [(ngModel)]="msgData.room" name="room" />
               <input type="hidden" [(ngModel)]="msgData.nickname" name="nickname" />
-              <input id="btn-input" type="text" [(ngModel)]="msgData.message" name="message" class="form-control input-sm" placeholder="Type your message here..." required="" />
+              <input id="btn-input" type="text" [(ngModel)]="msgData.message" name="message" class="form-control input-md" placeholder="Type your message here..." required="" style="border: 1px solid lightblue; border-radius: 4px;"/>
               <span class="input-group-btn">
-                            <button class="btn btn-warning btn-sm" id="btn-chat" [disabled]="!msgForm.form.valid">
-                                Send</button>
+                            <button class="btn btn-link btn-md" id="btn-chat" [disabled]="!msgForm.form.valid" style="top:2.5px;">
+                              <span class="glyphicon glyphicon-send"></span><span style="padding-left: 5px">send</span>
+                            </button>
                         </span>
             </div>
           </form>

@@ -19,7 +19,7 @@ export class ShowProfileComponent implements OnInit {
   joinned: boolean = false;
   newUser = { nickname: '', room: '' };
   msgData = { room: '', nickname: '', message: '' };
-  socket = io('http://localhost:4000');
+  socket = io('http://localhost:3000');
 
 
   constructor(private userService: UserService, private router: Router, private chatService: ChatService) { }
@@ -27,7 +27,8 @@ export class ShowProfileComponent implements OnInit {
   ngOnInit() {
     this.userService.getUserProfile().subscribe(
       res => {
-        localStorage.setItem('_id', res['user']._id);
+        // localStorage.setItem('_id', res['user']._id);
+        this.userService.setID(res['user']._id);
         this.loggedUser = res['user'];
         this.userService.getOthersProfile().subscribe(
           res => {
@@ -85,14 +86,29 @@ export class ShowProfileComponent implements OnInit {
     var date = new Date();
     const id = localStorage.getItem('_id');
     let room = (id < this.userDetails._id) ? (this.userDetails._id + id ) : (id + this.userDetails._id);
-    this.newUser.nickname = this.loggedUser.fullName;
+    this.newUser.nickname = this.loggedUser.fullName.split(' ')[0];
     this.newUser.room = room;
     localStorage.setItem("user", JSON.stringify(this.newUser));
     this.getChatByRoom(this.newUser.room);
     this.msgData = { room: this.newUser.room, nickname: this.newUser.nickname, message: '' };
     this.joinned = true;
-    this.socket.emit('save-message', { room: this.newUser.room, nickname: this.newUser.nickname, message: 'Join this room', updated_at: date });
+    this.socket.emit('save-message', { room: this.newUser.room, nickname: this.newUser.nickname, message: 'Joined', updated_at: date });
     this.router.navigate(['/chatroom']);
   }
+
+  joinCommonRoom() {
+    var date = new Date();
+    const id = localStorage.getItem('_id');
+    // let room = (id < this.userDetails._id) ? (this.userDetails._id + id ) : (id + this.userDetails._id);
+    this.newUser.nickname = this.loggedUser.fullName.split(' ')[0];
+    this.newUser.room = 'common-room';
+    localStorage.setItem("user", JSON.stringify(this.newUser));
+    this.getChatByRoom(this.newUser.room);
+    this.msgData = { room: this.newUser.room, nickname: this.newUser.nickname, message: '' };
+    this.joinned = true;
+    this.socket.emit('save-message', { room: this.newUser.room, nickname: this.newUser.nickname, message: 'Joined', updated_at: date });
+    this.router.navigate(['/chatroom']);
+  }
+
 
 }

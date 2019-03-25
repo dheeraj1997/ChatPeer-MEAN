@@ -1,10 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-// import { Headers } from '@angular/http';
-// import { map } from 'rxjs/operators';
-
 import 'rxjs/add/operator/map';
-import {ImportMetadata} from "@angular/compiler-cli/src/metadata/evaluator";
 import { environment } from '../../environments/environment';
 
 @Injectable()

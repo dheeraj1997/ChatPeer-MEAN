@@ -33,7 +33,7 @@ import { ChatroomComponent } from './chatroom/chatroom.component';
   imports: [
     BrowserModule,
     FormsModule,
-    RouterModule.forRoot(appRoutes),
+    RouterModule.forRoot(appRoutes,{useHash:true}),
     HttpClientModule
   ],
   providers: [{

@@ -16,7 +16,7 @@ export class UserProfileComponent implements OnInit {
       res => {
         this.userDetails = res['user'];
         // console.log(res.user._id);
-        localStorage.setItem('_id', res['user']._id);
+        this.userService.setID(res['user']._id);
         // this.userDetails.interest = JSON.parse(this.userDetails.interest)
       },
       err => {

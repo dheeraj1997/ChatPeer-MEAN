@@ -9,7 +9,7 @@ module.exports.register = (req, res, next) => {
     user.fullName = req.body.fullName;
     user.email = req.body.email;
     user.age = req.body.age;
-    user.locality = req.body.locality;
+    user.locality = req.body.locality.toLowerCase();
     var int = req.body.interest.toLowerCase().split(",");
     user.interest = int;
     user.password = req.body.password;
@@ -57,14 +57,15 @@ module.exports.logout = (req, res, next) => {
         {$set:{status:false}},
         function (err,res) {
             if (err) throw err;
-            console.log(res);
+            // console.log(res);
         });
     return res.status(200).json({status:true, message:'User logged out'});
 }
 
 module.exports.userProfile = (req, res, next) =>{
-    // console.log(req._id);
+    console.log(req._id);
     User.findOne({ _id: req._id },
+        // console.log(_id);
         (err, user) => {
             if (!user)
                 return res.status(404).json({ status: false, message: 'User record not found.' });
@@ -75,18 +76,18 @@ module.exports.userProfile = (req, res, next) =>{
 }
 
 module.exports.suggestProfile = (req, res, next) =>{
-    // console.log("suggesting profile ... ", req.params);
+    console.log("suggesting profile ... ", req.params);
     User.findOne({ _id: req.params._id }).then(function (results){
-        // console.log("then work ",results._id);
+        console.log("then work ",results.age, typeof results.age);
             User.aggregate([
                 {
                     "$match": {
                         "_id": {"$ne": results._id},
-                        "status": {"$ne": false},
+                        // "status": true,
                         "$or": [
                             {"interest": {"$in": results.interest}},
-                            {"locality": results.locality},
-                            {"age": {"$gte": results.age - (5)}}
+                            {"age": {"$gte": results.age - 5,"$lte":results.age + 5}},
+                            {"locality": results.locality}
                         ]
                     },
                 },
@@ -94,6 +95,7 @@ module.exports.suggestProfile = (req, res, next) =>{
                     "$project": {
                         "fullName": 1,
                         "age": 1,
+                        "ageDiff": {"$abs": {"$subtract":["$age",results.age]}},
                         "locality": 1,
                         "interest": 1,
                         "common": {
@@ -104,15 +106,16 @@ module.exports.suggestProfile = (req, res, next) =>{
                     },
                 },
                 {
-                    "$sort": {common:-1,age:1}
+                    "$sort": {common:-1,ageDiff:1}
                 }
             ], (err, doc) => {
+                // console.log('suggest profile error ', doc);
                 if (!doc){
                     console.log('res is not correct');
                     return res.status(404).json({ status: false, message: 'User record not found.' });
                 }
                 else{
-                    // console.log('suggest profile called ', res);
+                    // console.log('suggest profile called ', doc);
                     return res.send(doc);
                 }
             });

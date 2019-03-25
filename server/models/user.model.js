@@ -8,16 +8,16 @@ var userSchema = new mongoose.Schema({
         required: 'Full name can\'t be empty'
     },
     age: {
-        type: String,
-        required: 'Full name can\'t be empty'
+        type: Number,
+        required: 'Age can\'t be empty'
     },
     locality: {
         type: String,
-        required: 'Full name can\'t be empty'
+        required: 'Locality can\'t be empty'
     },
     interest: {
         type: Object,
-        required: 'Full name can\'t be empty'
+        required: 'Interests can\'t be empty'
     },
     email: {
         type: String,

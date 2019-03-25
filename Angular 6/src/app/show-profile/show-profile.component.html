@@ -1,5 +1,5 @@
 <div class="wrapper">
-  <div id="formContent">
+  <div id="formContent" >
     <!--<div>-->
       <!--<img src="assets/img/user-avatar.png" id="icon" alt="User Icon" />-->
     <!--</div>-->
@@ -9,7 +9,7 @@
       <thead>
 
       <tr>
-        <th><img style="display:block;" width="100%" height="auto"   src="assets/img/user-avatar.png" id="icon" alt="User Icon" /></th>
+        <!--<th><img style="display:block;" width="100%" height="auto"   src="assets/img/user-avatar.png" id="icon" alt="User Icon" /></th>-->
         <th colspan="2" class="text-center">User Profile </th>
       </tr>
       <!--<tr><th><img src="assets/img/user-avatar.png" id="icon" alt="User Icon" /></th></tr>-->
@@ -35,36 +35,37 @@
         <td>{{userDetails.interest}}</td>
       </tr>
       <tr>
-        <td colspan="2" class="text-center">
-          <input type="button" (click)="joinRoom()" value="Chat" />
-          <input type="button" (click)="ifReject()" value="Next" />
+        <td colspan="2" class="text-center inline-block">
+          <input type="button" (click)="joinRoom()" value="Chat"/>
+          <input type="button" (click)="ifReject()" value="Next"/><br>
           <input type="button" (click)="ifProfile()" value="My Profile"/>
-          <input type="button" (click)="onLogout()" value="Logout"/>
+          <input type="button" (click)="onLogout()" value="Logout"/><br>
+          <input type="button" (click)="joinCommonRoom()" value="Common Room"/>
         </td>
       </tr>
+      </tbody>
     </table>
 
     <table *ngIf="!userDetails">
-
-    <thead>
-    <tr>
-      <!--<th><img style="display:block;" width="100%" height="auto"   src="assets/img/user-avatar.png" id="icon" alt="User Icon" /></th>-->
-      <th colspan="2" class="text-center">No Users Online</th>
-    </tr>
-    <!--<tr><th><img src="assets/img/user-avatar.png" id="icon" alt="User Icon" /></th></tr>-->
-    </thead>
-    <tbody >
-    <tr aria-rowspan="2">
-      <td colspan="2" class="text-center">Please refresh the browser or try again later!!</td>
-      <!--<alert>No Users Online</alert>-->
-    </tr>
-    <tr>
-      <td><input type="button" (click)="ifProfile()" value="My Profile"/></td>
-      <td><input type="button" (click)="onLogout()" value="Logout"/></td>
-    </tr>
-    </tbody>
+      <thead>
+        <tr>
+          <th colspan="2" class="text-center">No Users Online</th>
+        </tr>
+      </thead>
+      <tbody >
+        <tr>
+          <td colspan="2" class="text-center">Please refresh the browser or come back later!!</td>
+          <!--<alert>No Users Online</alert>-->
+        </tr>
+        <tr>
+          <td colspan="2" class="text-center">
+            <input type="button" (click)="ifProfile()" value="My Profile"/>
+            <input type="button" (click)="onLogout()" value="Logout"/><br>
+            <input type="button" (click)="joinCommonRoom()" value="Common Room"/>
+          </td>
+        </tr>
+      </tbody>
     </table>
-
     <!-- Error message -->
     <div class="alert" *ngIf="serverErrorMessages">
       {{serverErrorMessages}}
