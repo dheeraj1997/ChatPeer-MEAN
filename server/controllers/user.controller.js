@@ -83,7 +83,7 @@ module.exports.suggestProfile = (req, res, next) =>{
                 {
                     "$match": {
                         "_id": {"$ne": results._id},
-                        // "status": true,
+                        "status": true,
                         "$or": [
                             {"interest": {"$in": results.interest}},
                             {"age": {"$gte": results.age - 5,"$lte":results.age + 5}},
